@@ -3,6 +3,7 @@ package ChickenCalculator;
 import javax.swing.*;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,9 +18,13 @@ public class mainForm {
     private JButton calculateTimeJButton;
     private JPanel panelMain;
     private JFormattedTextField endChickenGoalJTextField;
+    private JPanel farmInfoJPanel;
+    private JPanel calculateTimeJPanel;
+    private JPanel calculateChickenJPanel;
+    private JFormattedTextField waitTimeJFormattedTextField;
+    private JButton calculateChickenJButton;
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         // create new frame
         JFrame frame = new JFrame("mainForm");
 
@@ -34,41 +39,48 @@ public class mainForm {
 
         // display window
         frame.setVisible(true);
-
     }
 
-    public mainForm()
-    {
+    // constructor
+    public mainForm() {
         initFarmInfo();
         initCalculateTimePanel();
     }
 
-    public void initFarmInfo()
-    {
+    // initialize farm info JPanel
+    public void initFarmInfo() {
+        // make chicken count text input accept only NUMBERS above 0
         NumberFormatter nf = new NumberFormatter();
         nf.setMinimum(0);
         chickenCountJFormattedTextField.setFormatterFactory(new DefaultFormatterFactory(nf));
         chickenCountJFormattedTextField.setValue(0);
 
+        // make chicken per minute text input accept only NUMBERS above 1
+        // note: minimum is 1 to avoid division by 0 errors
         nf = new NumberFormatter();
         nf.setMinimum(1);
         chickenPerMinuteJFormattedTextField.setFormatterFactory(new DefaultFormatterFactory(nf));
         chickenPerMinuteJFormattedTextField.setValue(1);
 
+        // make make boost text input only accept numbers above 1
+        // note: minimum is 1 to avoid division by 0 errors
         nf = new NumberFormatter();
-        nf.setMaximum(new Integer(999));
-        nf.setMinimum(new Integer(1));
+        nf.setMaximum(999);
+        nf.setMinimum(1);
         boostJFormattedJTextField.setFormatterFactory(new DefaultFormatterFactory(nf));
         boostJFormattedJTextField.setValue(1);
 
+        // set minimum and maximum of coop Count spinner
         SpinnerNumberModel sm = (SpinnerNumberModel) coopCountJSpinner.getModel();
         sm.setMinimum(1);
         sm.setMaximum(4);
         sm.setValue(4);
     }
 
-    public void initCalculateTimePanel()
-    {
+    // initialize calculate time JPanel
+    public void initCalculateTimePanel() {
+        // make chicken population goal text input accept only numbers
+        // minimum is 1 for... arbitrary reasons
         NumberFormatter nf = new NumberFormatter();
         nf.setMinimum(1);
         this.endChickenGoalJTextField.setFormatterFactory(new DefaultFormatterFactory(nf));
@@ -83,25 +95,22 @@ public class mainForm {
         });
     }
 
-    public void calculateTimeButtonPressed()
-    {
+    public void calculateTimeButtonPressed() {
         Chicken chicken = getResults();
         boolean isOffline = this.offlineJCheckBox.isSelected();
-        int endAmount = Integer.parseInt(this.endChickenGoalJTextField.getText().replaceAll(",",""));
+        int endAmount = Integer.parseInt(this.endChickenGoalJTextField.getText().replaceAll(",", ""));
 
         System.out.println(chicken.calculateTimeToGoal(endAmount, isOffline));
-        System.out.println(chicken.calculateChickenSpawn(60, isOffline));
+        System.out.println(chicken.calculateChickenSpawn(240, isOffline));
     }
 
 
-    public Chicken getResults()
-    {
+    public Chicken getResults() {
         // read inputs into variables
-        int chickenPerMinute = Integer.parseInt(this.chickenPerMinuteJFormattedTextField.getText().replaceAll(",",""));
-        int currentChickenCount = Integer.parseInt(this.chickenCountJFormattedTextField.getText().replaceAll(",",""));
+        int chickenPerMinute = Integer.parseInt(this.chickenPerMinuteJFormattedTextField.getText().replaceAll(",", ""));
+        int currentChickenCount = Integer.parseInt(this.chickenCountJFormattedTextField.getText().replaceAll(",", ""));
         int coopCount = (int) coopCountJSpinner.getValue();
-        int boostMultiplier = Integer.parseInt(this.boostJFormattedJTextField.getText().replaceAll(",",""));
-
+        int boostMultiplier = Integer.parseInt(this.boostJFormattedJTextField.getText().replaceAll(",", ""));
 
         // return Chicken object
         return new Chicken(chickenPerMinute, currentChickenCount, coopCount, boostMultiplier);
