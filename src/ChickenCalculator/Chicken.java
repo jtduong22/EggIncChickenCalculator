@@ -10,18 +10,26 @@ public class Chicken
     private int currentChickenCount;
     private int coopCount;
     private int boostMultiplier;
+    private boolean isOffline;
 
     // constants
     final int OFFLINEMULTIPLIER = 3;
 
     // constructors
-    public Chicken(int chickenPerMinute, int currentChickenCount, int coopCount, int boostMultiplier)
+    public Chicken(int chickenPerMinute, int currentChickenCount, int coopCount, int boostMultiplier, boolean isOffline)
     {
         // set class member values
         this.chickenPerMinute = chickenPerMinute;
         this.currentChickenCount = currentChickenCount;
         this.coopCount = coopCount;
         this.boostMultiplier = boostMultiplier;
+        this.isOffline = isOffline;
+    }
+
+    // constructors
+    public Chicken(int chickenPerMinute, int currentChickenCount, int coopCount, int boostMultiplier)
+    {
+        this(chickenPerMinute, currentChickenCount, coopCount, boostMultiplier, true);
     }
 
     public Chicken(int chickenPerMinute)
@@ -54,7 +62,7 @@ public class Chicken
     // methods to calculate how many chickens will hatch in a period of time
     public int calculateChickenSpawn(int minutes, int multiplier)
     {
-        int chicken = chickenPerMinute * minutes * multiplier;
+        int chicken = currentChickenCount + chickenPerMinute * minutes * multiplier;
         return chicken;
     }
 
@@ -69,5 +77,7 @@ public class Chicken
     {
         return calculateChickenSpawn(minutes, true);
     }
+
+    public boolean isOffline() {return isOffline;}
 
 }

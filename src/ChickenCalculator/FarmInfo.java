@@ -104,8 +104,9 @@ public class FarmInfo {
         int chickPerMinute = c.parseInt(chickenPerMinuteJFormattedTextField);
         int boost = c.parseInt(boostJFormattedTextField);
         int coopCount = (int) coopCountJSpinner.getValue();
+        boolean isOffline = isOffline();
 
-        return new Chicken(chickPerMinute, count, coopCount, boost);
+        return new Chicken(chickPerMinute, count, coopCount, boost, isOffline);
     }
 
     public boolean isOffline() { return offlineJCheckBox.isSelected();}
