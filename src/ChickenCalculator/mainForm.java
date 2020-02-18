@@ -3,12 +3,11 @@ package ChickenCalculator;
 import javax.swing.*;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class mainForm {
-    private Chicken mChicken;
+    private FarmInfo farmInfo;
 
     private JFormattedTextField chickenCountJFormattedTextField;
     private JFormattedTextField chickenPerMinuteJFormattedTextField;
@@ -43,8 +42,15 @@ public class mainForm {
 
     // constructor
     public mainForm() {
-        initFarmInfo();
-        initCalculateTimePanel();
+//        initFarmInfo();
+//        initCalculateTimePanel();
+
+        panelMain.removeAll();
+        panelMain = new JPanel();
+
+        farmInfo = new FarmInfo();
+        panelMain.add(farmInfo.farmPanel);
+//        panelMain.add(new FarmInfo().farmPanel);
     }
 
     // initialize farm info JPanel
@@ -96,24 +102,13 @@ public class mainForm {
     }
 
     public void calculateTimeButtonPressed() {
-        Chicken chicken = getResults();
-        boolean isOffline = this.offlineJCheckBox.isSelected();
-        int endAmount = Integer.parseInt(this.endChickenGoalJTextField.getText().replaceAll(",", ""));
+        Chicken chicken = farmInfo.getChicken();
+        boolean isOffline = farmInfo.isOffline();
+
+        int endAmount = 250000000;
 
         System.out.println(chicken.calculateTimeToGoal(endAmount, isOffline));
         System.out.println(chicken.calculateChickenSpawn(240, isOffline));
-    }
-
-
-    public Chicken getResults() {
-        // read inputs into variables
-        int chickenPerMinute = Integer.parseInt(this.chickenPerMinuteJFormattedTextField.getText().replaceAll(",", ""));
-        int currentChickenCount = Integer.parseInt(this.chickenCountJFormattedTextField.getText().replaceAll(",", ""));
-        int coopCount = (int) coopCountJSpinner.getValue();
-        int boostMultiplier = Integer.parseInt(this.boostJFormattedJTextField.getText().replaceAll(",", ""));
-
-        // return Chicken object
-        return new Chicken(chickenPerMinute, currentChickenCount, coopCount, boostMultiplier);
     }
 
 }
